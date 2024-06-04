@@ -56,9 +56,9 @@ class ItemRepositoryTest {
     @Test
     @DisplayName("라면 & 라면 상세 설명")
     public void findByItemAndItemDetailTest() {
-        Item item = itemRepository.findByItemNmAndItemDetail("라면","라면 상세 설명");
+        List<Item> item = itemRepository.findByItemNmAndItemDetail("라면","라면 상세 설명");
+        item.forEach(list->log.info(list));
 
-        log.info("라면 and 라면 상세 설명" + item);
     }
     @Test
     @DisplayName("price가 30000이하 검색")
@@ -75,6 +75,11 @@ class ItemRepositoryTest {
         for (Item item : itemList) {
             log.info(item);
         }
-
     }
+        @Test
+        @DisplayName("findbyItemDetailByNative ")
+        public void findbyItemDetailByNative() {
+            List<Item> items = itemRepository.findbyItemDetailByNative("라면");
+             items.forEach(result->log.info(result));
+}
 }
