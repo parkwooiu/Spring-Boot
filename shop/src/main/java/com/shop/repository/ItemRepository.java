@@ -3,11 +3,12 @@ package com.shop.repository;
 import com.shop.entity.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ItemRepository extends JpaRepository<Item, Long> {
+public interface ItemRepository extends JpaRepository<Item, Long> , QuerydslPredicateExecutor<Item> {
 
     Item findByItemNm(String itemNm);
    // Item findByItemDetail(String str);
@@ -15,6 +16,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     List<Item> findByPriceLessThan(int price);
     List<Item> findByPriceLessThanOrderByPriceDesc(Integer price);
+    List<Item> findByPriceGreaterThan(Integer price);
 
 
     @Query("select i from Item i " +
