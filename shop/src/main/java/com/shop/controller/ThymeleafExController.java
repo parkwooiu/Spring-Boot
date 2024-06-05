@@ -21,9 +21,10 @@ public class ThymeleafExController {
 
     @GetMapping(value = "/ex01")
     public String ex01(Model model) {
-        model.addAttribute("data","타임리프 예제 입니다.");
+        model.addAttribute("data", "타임리프 예제 입니다.");
         return "thymeleaf/thymeleafEx01";
     }
+
     @GetMapping(value = "/ex02")
     public String ex02(Model model) {
         ItemDto itemDto = ItemDto.builder()
@@ -32,9 +33,10 @@ public class ThymeleafExController {
                 .price(10000)
                 .regTime(LocalDateTime.now())
                 .build();
-        model.addAttribute("itemDto",itemDto);
+        model.addAttribute("itemDto", itemDto);
         return "thymeleaf/thymeleafEx02";
     }
+
     @GetMapping(value = "/ex03")
     public String ex03(Model model) {
         List<ItemDto> itemDtoList = new ArrayList<>();
@@ -53,6 +55,7 @@ public class ThymeleafExController {
         return "thymeleaf/thymeleafEx03";
 
     }
+
     @GetMapping(value = "/ex04")
     public String ex04(Model model) {
         List<ItemDto> itemDtoList = new ArrayList<>();
@@ -71,30 +74,46 @@ public class ThymeleafExController {
         return "thymeleaf/thymeleafEx04";
 
     }
+
     @GetMapping("/ex05")
     public String ex05(Model model) {
         return "thymeleaf/thymeleafEx05";
     }
+
     @GetMapping("/ex06")
     public String ex06(@RequestParam("param1") String param1,
                        @RequestParam("param2") String param2
-                       ) {
+    ) {
         log.info("---------------------------------");
         log.info(param1);
         log.info(param2);
         return null;
     }
+
     @GetMapping("/ex07")
     public String ex07(Model model) {
-      model.addAttribute("data","<b>Spring Boot</b>");
+
         return "thymeleaf/thymeleafEx07";
     }
+    @GetMapping("/ex07_")
+    public String ex07_(Model model) {
+
+        return "thymeleaf/thymeleafEx07_";
+    }
+
     @GetMapping("/ex08")
     public String ex08(
             @RequestParam("param2") String param2,
             Model model) {
-      log.info("=---------------------------");
-      log.info("----------------------------");
+        log.info("=---------------------------");
+        log.info("----------------------------");
         return null;
+    }
+
+    @GetMapping("/ex09")
+    public String ex09(Model model) {
+        model.addAttribute("data", "Spring!!!");
+        model.addAttribute("num",10);
+        return "thymeleaf/thymeleafEx09";
     }
 }
