@@ -2,9 +2,6 @@ package com.shop.service;
 
 import com.shop.dto.MemberFormDto;
 import com.shop.entity.Member;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,13 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @Log4j2
 class MemberServiceTest {
 
     @Autowired
-    MemberService memberService;
+    MemberService  memberService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -32,7 +28,7 @@ class MemberServiceTest {
                 .password("1234")
                 .build();
 
-        return Member.createMember(memberFormDto, passwordEncoder);
+        return Member.createMember(memberFormDto,passwordEncoder);
     }
 
     @Test
@@ -40,7 +36,7 @@ class MemberServiceTest {
     public void saveMemberTest(){
         Member member = createMember();
 
-        Member savedMember = memberService.saveMember(member);
+        Member savaedMember = memberService.savaMember(member);
     }
 
     @Test
@@ -49,11 +45,9 @@ class MemberServiceTest {
         Member member = createMember();
         Member member2 = createMember();
 
-        Member savedMember = memberService.saveMember(member);
-        Member savedMember2 = memberService.saveMember(member2);
+        Member savaedMember = memberService.savaMember(member);
+        Member savaedMember2 = memberService.savaMember(member2);
     }
-
-
 
 
 }

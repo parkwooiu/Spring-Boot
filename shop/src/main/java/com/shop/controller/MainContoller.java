@@ -1,14 +1,13 @@
 package com.shop.controller;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-@RequiredArgsConstructor
-public class MainController {
+public class MainContoller {
 
-    @GetMapping(value="/")
+    @GetMapping("/")
     public String main(){
         return "main";
     }

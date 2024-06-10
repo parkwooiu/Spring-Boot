@@ -5,6 +5,7 @@ import com.shop.repository.MemberRepository;
 import javassist.bytecode.DuplicateMemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,26 +18,36 @@ import javax.transaction.Transactional;
 @RequiredArgsConstructor
 @Log4j2
 public class MemberService implements UserDetailsService {
+
     private final MemberRepository memberRepository;
 
-    public Member saveMember(Member member){
-        validateDuplicateMember(member);
+    public Member savaMember(Member member) {
+        validdateDuplicatemember(member);
         return memberRepository.save(member);
     }
 
-    private void validateDuplicateMember(Member member){
-
+    private void validdateDuplicatemember(Member member) {
         Member findMember = memberRepository.findByEmail(member.getEmail());
 
-        if(findMember != null){
+        if (findMember != null) {
             throw new IllegalStateException("이미 가입된 회원입니다.");
         }
     }
 
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("-----------------------loadUserByUsername----------------------");
-        return null;
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        log.info("--------------------loadUserByUsername---------------------------------");
+        log.info(email);
+        Member member = memberRepository.findByEmail(email);
+
+        if (member == null) {
+            throw new UsernameNotFoundException(email);
+        }
+
+        return User.builder()
+                .username(member.getEmail())
+                .password(member.getPassword())
+                .roles(member.getRole().toString())
+                .build();
     }
-
-
 }

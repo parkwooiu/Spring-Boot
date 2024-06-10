@@ -16,32 +16,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/members")
-@RequiredArgsConstructor
 @Log4j2
+@RequiredArgsConstructor
+@RequestMapping("/members")
 public class MemberController {
-
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
 
-    @GetMapping(value = "/new")
-    public String memberForm(Model model){
+    @GetMapping("/new")
+    public String newMember(Model model) {
         model.addAttribute("memberFormDto", new MemberFormDto());
+
         return "member/memberForm";
     }
 
-    @PostMapping(value = "/new")
-    public String newMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model){
-        log.info("memberFormDto => " + memberFormDto);
+    //PRG방식
+    @PostMapping("/new")
+    public String memberForm(@Valid MemberFormDto memberFormDto,
+                             BindingResult bindingResult , Model model) {
 
-        if(bindingResult.hasErrors()){
+        if(bindingResult.hasErrors()) {
             return "member/memberForm";
         }
 
         try {
+            //MemberFormDto >>> Member Entity 변환
             Member member = Member.createMember(memberFormDto, passwordEncoder);
-            memberService.saveMember(member);
-        } catch (IllegalStateException e){
+            //member 객체 저장(회원저장)
+            memberService.savaMember(member);
+        }catch (IllegalStateException e){  //중복회원 입력시 예외 발생
             model.addAttribute("errorMessage", e.getMessage());
             return "member/memberForm";
         }
@@ -54,4 +57,9 @@ public class MemberController {
         return "member/memberLoginForm";
     }
 
+    @GetMapping("/login/error")
+    public String loginError(Model model){
+        model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요.");
+        return "member/memberLoginForm";
+    }
 }

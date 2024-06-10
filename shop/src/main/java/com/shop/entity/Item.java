@@ -12,31 +12,30 @@ import java.time.LocalDateTime;
 @Getter
 @ToString
 @Entity
-@Table(name="item")
+@Table(name = "item")
 public class Item {
 
     @Id
-    @Column(name = "item_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)     // 기본 키의 값을 데이터베이스가 자동으로 생성하도록 지정합니다
-    private Long id;    //상품코드
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false, length = 50)
-    private String itemNm;   //상품명
+    private String itemNm;   //item_Nm
 
     @Column(name = "price", nullable = false)
-    private int price;  //가격
+    private  int price;   //price
 
     @Column(nullable = false)
-    private int stoackNumber;  //재고수량
+    private  int stoackNumber; //stoack_number
 
     @Lob
     @Column(nullable = false)
-    private String itemDetail; //상품 상세설명
+    private String itemDetail;
 
     @Enumerated(EnumType.STRING)
-    private ItemSellStatus itemSellStatus; //상품 판매 상태
+    private ItemSellStatus itemSellStatus;
 
-    private LocalDateTime regTime;   //등록 시간
+    private LocalDateTime regTime;
 
-    private LocalDateTime updateTime; //수정 시간
+    private LocalDateTime updateTime;
 }
