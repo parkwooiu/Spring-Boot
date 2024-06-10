@@ -5,8 +5,13 @@
     <title>Title</title>
 </head>
 <body>
-<p th:text="${data}">Hello Thymeleaf!</p>
-<br>
-[[${data}]]
+    <p th:text="${data}">Hello Thymeleaf!!!</p>
+    <p th:text="hello"></p>
+    <p th:text="'Hello'"></p>
+
+<!--    <p th:text="hello spring"></p> 공백있으면 에러뜬다.  ('')을 넣어줘야함     -->
+    <p th:text="|&nbsp; Hello ${data} |"></p>
+    <br>
+    [[${data}]]
 </body>
 </html>

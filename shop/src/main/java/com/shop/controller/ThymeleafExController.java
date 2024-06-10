@@ -1,7 +1,6 @@
 package com.shop.controller;
 
 import com.shop.dto.ItemDto;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,67 +26,78 @@ public class ThymeleafExController {
 
     @GetMapping(value = "/ex02")
     public String ex02(Model model) {
+
         ItemDto itemDto = ItemDto.builder()
                 .itemNm("테스트 상품1")
                 .itemDetail("상품 상세 설명")
                 .price(10000)
                 .regTime(LocalDateTime.now())
                 .build();
+
         model.addAttribute("itemDto", itemDto);
+
         return "thymeleaf/thymeleafEx02";
     }
 
     @GetMapping(value = "/ex03")
     public String ex03(Model model) {
+
         List<ItemDto> itemDtoList = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
+        for(int i=0; i<10; i++) {
+
             ItemDto itemDto = ItemDto.builder()
-                    .itemNm("테스트 상품1")
-                    .itemDetail("상품 상세 설명")
-                    .price(10000)
+                    .itemNm("테스트 상품" + i)
+                    .itemDetail("상품 상세 설명" + i)
+                    .price(10000*i)
                     .regTime(LocalDateTime.now())
                     .build();
+
             itemDtoList.add(itemDto);
         }
 
         model.addAttribute("itemDtoList", itemDtoList);
-        return "thymeleaf/thymeleafEx03";
 
+        return "thymeleaf/thymeleafEx03";
     }
 
     @GetMapping(value = "/ex04")
     public String ex04(Model model) {
+
         List<ItemDto> itemDtoList = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
+        for(int i=0; i<10; i++) {
+
             ItemDto itemDto = ItemDto.builder()
-                    .itemNm("테스트 상품1")
-                    .itemDetail("상품 상세 설명")
-                    .price(10000)
+                    .itemNm("테스트 상품" + i)
+                    .itemDetail("상품 상세 설명" + i)
+                    .price(10000*i)
                     .regTime(LocalDateTime.now())
                     .build();
+
             itemDtoList.add(itemDto);
         }
 
         model.addAttribute("itemDtoList", itemDtoList);
-        return "thymeleaf/thymeleafEx04";
 
+        return "thymeleaf/thymeleafEx04";
     }
 
     @GetMapping("/ex05")
     public String ex05(Model model) {
+
+        model.addAttribute("link", "ex08");
         return "thymeleaf/thymeleafEx05";
     }
 
     @GetMapping("/ex06")
     public String ex06(@RequestParam("param1") String param1,
-                       @RequestParam("param2") String param2
-    ) {
-        log.info("---------------------------------");
+                       @RequestParam("param2") String param2) {
+        log.info("-------------------------");
         log.info(param1);
         log.info(param2);
-        return null;
+
+        return "thymeleaf/thymeleafEx06";
     }
 
     @GetMapping("/ex07")
@@ -95,25 +105,37 @@ public class ThymeleafExController {
 
         return "thymeleaf/thymeleafEx07";
     }
+
     @GetMapping("/ex07_")
     public String ex07_(Model model) {
+
+        model.addAttribute("data", "<b>Spring boot</b>");
 
         return "thymeleaf/thymeleafEx07_";
     }
 
     @GetMapping("/ex08")
     public String ex08(
-            @RequestParam("param2") String param2,
-            Model model) {
-        log.info("=---------------------------");
-        log.info("----------------------------");
-        return null;
+        @RequestParam("param2") String p2,
+        Model model){
+
+        log.info("------------------------------");
+        log.info(p2);
+        log.info("------------------------------");
+
+        return "thymeleaf/thymeleafEx08";
     }
 
     @GetMapping("/ex09")
-    public String ex09(Model model) {
-        model.addAttribute("data", "Spring!!!");
-        model.addAttribute("num",10);
+    public String ex09(Model model){
+
+        model.addAttribute("data", "spring!!!");
+        model.addAttribute("num", 10);
+
         return "thymeleaf/thymeleafEx09";
     }
+
+
+
+
 }

@@ -41,17 +41,17 @@ class ItemRepositoryTest {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         QItem qItem= QItem.item;
-        
-       // select * from 테이블명 where 조건
-     List<Item> item = queryFactory
+
+        // select * from 테이블명 where 조건
+        List<Item> item = queryFactory
                 .selectFrom(qItem)
                 .where(qItem.itemNm.eq("한라산"))
                 .fetch();
 
         item.forEach(list->log.info(list));
-                
-                
-       // Item item = queryFactory.select()
+
+
+        // Item item = queryFactory.select()
     }
 
     @Test
@@ -84,22 +84,22 @@ class ItemRepositoryTest {
     @Test
     @DisplayName("상품 조회2")
     public void queryDslTest5() {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        //JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
-        createItemList2();
+        //createItemList2();
 
         BooleanBuilder builder = new BooleanBuilder();
 
-        QItem Item = QItem.item;
+        QItem item = QItem.item;
 
         String itemDetail = "테스트 상품 상세 설명";
         int price = 10003;
-        String itemSellstat = "SELL";
+        String itemSellStat = "SELL";
 
-        builder.and(Item.itemDetail.like("%"+itemDetail+"%"));
-        builder.and(Item.price.eq(price));
-        if(StringUtils.equals(itemSellstat,itemDetail)){
-            builder.and(Item.itemSellStatus.eq(ItemSellStatus.SELL));
+        builder.and(item.itemDetail.like("%"+itemDetail+"%"));
+        builder.and(item.price.eq(price));
+        if(StringUtils.equals(itemSellStat, ItemSellStatus.SELL)){
+            builder.and(item.itemSellStatus.eq(ItemSellStatus.SELL));
         }
 
         Pageable pageable = PageRequest.of(0,5);
@@ -111,7 +111,6 @@ class ItemRepositoryTest {
 
         log.info("total elements : " + itemPageResult.getTotalElements());
         log.info("total pages : " + itemPageResult.getTotalPages());
-        itemPageResult.getContent().forEach(list->log.info(list));
     }
 
 
@@ -137,13 +136,13 @@ class ItemRepositoryTest {
     @Test
     @DisplayName("라면 검색")
     public void findByNameTest() {
-      Item item = itemRepository.findByItemNm("라면1");
-      log.info("라면" + item);
+        Item item = itemRepository.findByItemNm("라면1");
+        log.info("라면" + item);
     }
     @Test
     @DisplayName("라면 상세 설명")
     public void findByItemDetailTest() {
-       List<Item> item = itemRepository.findByItemDetail("상품");
+        List<Item> item = itemRepository.findByItemDetail("상품");
         item.forEach(list->log.info(list));
     }
     @Test
@@ -169,12 +168,12 @@ class ItemRepositoryTest {
             log.info(item);
         }
     }
-        @Test
-        @DisplayName("findbyItemDetailByNative ")
-        public void findbyItemDetailByNative() {
-            List<Item> items = itemRepository.findbyItemDetailByNative("라면");
-             items.forEach(result->log.info(result));
-}
+    @Test
+    @DisplayName("findbyItemDetailByNative ")
+    public void findbyItemDetailByNative() {
+        List<Item> items = itemRepository.findByItemDetailByNative("라면");
+        items.forEach(result->log.info(result));
+    }
     public void createItemList2(){
         for(int i=1;i<=5;i++){
             Item item = new Item();

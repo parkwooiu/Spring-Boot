@@ -17,7 +17,7 @@ public class Item {
 
     @Id
     @Column(name = "item_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)     // 기본 키의 값을 데이터베이스가 자동으로 생성하도록 지정합니다
     private Long id;    //상품코드
 
     @Column(nullable = false, length = 50)
