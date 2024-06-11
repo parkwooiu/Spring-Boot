@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Member {
+public class Member  extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +43,6 @@ public class Member {
                 .password(passwordEncoder.encode(memberFormDto.getPassword()))
                 .role(Role.ADMIN)
                 .build();
-
     }
 
 
