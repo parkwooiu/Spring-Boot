@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -26,6 +27,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final ItemImgService itemImgService;
     private final ItemImgRepository itemImgRepository;
+    private final FileService fileService;
 
     public Long saveItem(ItemFormDto itemFormDto,
                List<MultipartFile> itemImgFileList) throws Exception{
@@ -66,5 +68,24 @@ public class ItemService {
        itemFormDto.setItemImgDtoList(itemImgDtoList);
 
        return itemFormDto;
+    }
+
+    public void updateItemImg(Long itemImgId, MultipartFile itemImgFile) throws Exception{
+        if(!itemImgFile.isEmpty()){
+            ItemImg savedItemImg = itemImgRepository.findById(itemImgId)
+                    .orElseThrow(EntityNotFoundException::new);
+
+
+            //기존 이미지 파일 삭제
+            if(!StringUtils.isEmpty(savedItemImg.getImgName())){
+                fileService.deleteFile(itemImgLocation + "/" +
+                        savedItemImg.getImgName());
+            }
+            String oriImgName = itemImgFile.getOriginalFilename();
+            String imgName = fileService.uploadFile(ItemImgLocation,oriImgName, itemImgFile.getBytes());
+
+            String imgUrl = "/images/item/" + imgName;
+            savedItemImg.updateItemImg(oriImgName, imgName, imgUrl);
+        }
     }
 }
