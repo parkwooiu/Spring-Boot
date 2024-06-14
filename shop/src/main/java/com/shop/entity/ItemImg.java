@@ -6,33 +6,31 @@ import lombok.ToString;
 
 import javax.persistence.*;
 
+@Setter
+@Getter
+@ToString
 @Entity
 @Table(name = "item_img")
-@Getter
-@Setter
-@ToString
 public class ItemImg extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_img_id")
-    private Long id;    
-    
-    private String imgName;   //이미지 파일명
-    
-    private String oriImgName;    // 원본 이미지 파일명 
-    
-    private String imgUrl;      //이미지 조회 경로
-    
-    private String repimgYn;   //대표 이미지 여부
-    
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String imgName; //이미지명
+    private String oriImgName; //원본이미지명
+    private String imgUrl; //이미지 경로
+
+    private String repimgYn; //대표이미지(이미지가 여러장일 때 , 메인페이지에서 보이는 이미지)
+
     @ManyToOne(fetch = FetchType.LAZY)   //외래키 설정
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name="item_id")
     private Item item;
     
     public void updateItemImg(String oriImgName, String imgName, String imgUrl) {
         this.oriImgName = oriImgName;
         this.imgName = imgName;
-        this.imgUrl = imgUrl;
+        this.imgUrl = imgUrl;;
     }
 }

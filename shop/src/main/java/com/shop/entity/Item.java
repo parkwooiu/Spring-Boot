@@ -2,6 +2,7 @@ package com.shop.entity;
 
 import com.shop.constant.ItemSellStatus;
 import com.shop.dto.ItemFormDto;
+import com.shop.exception.OutOfStockException;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 public class Item extends BaseEntity {
 
     @Id
+    @Column(name = "item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -27,7 +29,7 @@ public class Item extends BaseEntity {
     private  int price;   //price
 
     @Column(nullable = false)
-    private  int stockNumber; //stock_number
+    private  int stockNumber; //stoack_number
 
     @Lob
     @Column(nullable = false)
@@ -44,4 +46,36 @@ public class Item extends BaseEntity {
         this.itemSellStatus = itemFormDto.getItemSellStatus();
     }
 
+    //상품 재고 수량 변경
+    public void removeStock(int stockNumber){
+
+        int restStock = this.stockNumber - stockNumber;
+
+        if(restStock < 0){
+            throw new OutOfStockException("상품 재고가 부족 합니다. (현재 재고 수량 :" + this.stockNumber + ")");
+        }
+
+        this.stockNumber = restStock;
+    }
+    //주문 쥐소
+    public void addStock(int stockNumber){
+        this.stockNumber += stockNumber;
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

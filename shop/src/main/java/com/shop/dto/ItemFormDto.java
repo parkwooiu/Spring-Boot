@@ -10,12 +10,11 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Setter
-@Getter
-@ToString
+@Getter @Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class ItemFormDto {
 
     private Long id;
@@ -26,7 +25,7 @@ public class ItemFormDto {
     @NotNull(message = "가격은 필수 입력 값입니다.")
     private Integer price;
 
-    @NotBlank(message = "이름은 필수 입력 값입니다.")
+    @NotBlank(message = "상품 상세는 필수 입력 값입니다.")
     private String itemDetail;
 
     @NotNull(message = "재고는 필수 입력 값입니다.")
@@ -34,20 +33,20 @@ public class ItemFormDto {
 
     private ItemSellStatus itemSellStatus;
 
-    private List<ItemImgDto> itemImgDtoList = new ArrayList<>();  //상품저장 후 수정할 때 상품 이미지 정보를 저장하는 리스트
+    private List<ItemImgDto> itemImgDtoList = new ArrayList<>();
 
-    private List<Long> itemImgIds = new ArrayList<>();   //상품의 이미지 아이디를 저장하는 리스트
+    private List<Long> itemImgIds = new ArrayList<>();
 
     private static ModelMapper modelMapper = new ModelMapper();
 
-    //엔티티 객체와 Dto객체 간의 데이터를 복사하여 복사한 객체를 반환해주는 메소드
+    //ItemFormDto 객체(this)를 Item 클래스의 객체로 변환
     public Item createItem(){
         return modelMapper.map(this, Item.class);
     }
-    //엔티티 객체와 Dto객체 간의 데이터를 복사하여 복사한 객체를 반환해주는 메소드
+
     public static ItemFormDto of(Item item){
+
         return modelMapper.map(item, ItemFormDto.class);
     }
-
 
 }

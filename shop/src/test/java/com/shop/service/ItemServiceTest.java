@@ -6,7 +6,6 @@ import com.shop.entity.Item;
 import com.shop.entity.ItemImg;
 import com.shop.repository.ItemImgRepository;
 import com.shop.repository.ItemRepository;
-import lombok.Builder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,26 +32,24 @@ class ItemServiceTest {
     ItemRepository itemRepository;
 
     @Autowired
-    ItemImgRepository imgRepository;
-    @Autowired
-    private ItemImgRepository itemImgRepository;
+    ItemImgRepository itemImgRepository;
 
-    List<MultipartFile> createMultipartFiles() throws Exception {
-        List<MultipartFile> multipartFilesList = new ArrayList<>();
+    List<MultipartFile> createMultipartFiles() throws Exception{
+        List<MultipartFile> multipartFileList = new ArrayList<>();
+
         for(int i=0; i<5; i++){
             String path = "C:/shop/item";
             String imageName = "image" + i + ".jpg";
-
             MockMultipartFile multipartFile = new MockMultipartFile(path, imageName, "image/jpeg", new byte[]{1,2,3,4});
-            multipartFilesList.add(multipartFile);
+            multipartFileList.add(multipartFile);
         }
-        return multipartFilesList;
+        return multipartFileList;
     }
 
     @Test
     @DisplayName("상품 등록 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    void savaItem() throws Exception {
+    void saveItem() throws Exception{
         ItemFormDto itemFormDto = ItemFormDto.builder()
                 .itemNm("테스트 상품")
                 .itemSellStatus(ItemSellStatus.SELL)
@@ -61,14 +58,15 @@ class ItemServiceTest {
                 .stockNumber(100)
                 .build();
 
-        List<MultipartFile> multipartFiles = createMultipartFiles();
+        List<MultipartFile> multipartFileList = createMultipartFiles();
 
-        Long itemId = itemService.saveItem(itemFormDto, multipartFiles);
+        Long itemId = itemService.saveItem(itemFormDto, multipartFileList);
 
-        List<ItemImg> itemImgsList = itemImgRepository.findByItemIdOrderByIdDesc(itemId);
+        List<ItemImg> itmeImgList = itemImgRepository.findByItemIdOrderByIdAsc(itemId);
 
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new EntityNotFoundException());
 
         assertEquals(itemFormDto.getItemNm(), item.getItemNm());
+
     }
 }

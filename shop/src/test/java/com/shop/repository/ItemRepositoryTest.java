@@ -183,7 +183,7 @@ class ItemRepositoryTest {
 
 
     }
-    
+
     @Test
     @DisplayName("라면 & 라면 상세 설명")
     public void findByItemNmAndItemDetailTest(){

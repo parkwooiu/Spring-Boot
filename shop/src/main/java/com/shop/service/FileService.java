@@ -12,22 +12,24 @@ import java.util.UUID;
 public class FileService {
 
     public String uploadFile(String uploadPath, String originalFileName, byte[] fileData) throws Exception{
+
         UUID uuid = UUID.randomUUID();
         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
 
-        log.info("extension : " +extension);
+        log.info("extension" + extension);
 
         String savedFileName = uuid.toString() + extension;
 
-        log.info("savedFileName : " + savedFileName);
+        log.info("savedFileName" + savedFileName);
 
         String fileUploadFullUrl = uploadPath + "/" + savedFileName;
 
-        log.info("fileUploadFullUrl : " + fileUploadFullUrl);
+        log.info("fileUploadFullUrl" + fileUploadFullUrl);
 
         FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
         fos.write(fileData);
         fos.close();
+
         return savedFileName;
     }
 
