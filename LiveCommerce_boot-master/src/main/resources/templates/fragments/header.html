@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>라이브 커머스</title>
+    <!-- 부트스트랩 CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+
+<body>
+<div th:fragment="header">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+        <a class="navbar-brand" href="/">라이브 커머스</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <!-- 카테고리 목록 표시 -->
+                <li th:each="category, iterStat : ${categories}" class="nav-item">
+                    <a th:href="@{/live/category(categoryId=${category.categoryID})}"
+                       class="nav-link">
+                        <img th:src="@{/resources/images/icons/__${iterStat.index + 1}__.png}" alt=""
+                             class="category-icon">
+                        <span th:text="${category.categoryName}"></span>
+                    </a>
+                </li>
+                <!-- 사용자 권한에 따른 메뉴 표시 -->
+                <li class="nav-item" th:classappend="${#authorization.expression('hasAnyAuthority(''ROLE_ADMIN'')')} ? 'd-block' : 'd-none'">
+                    <a class="nav-link" href="/admin/item/new">상품 등록</a>
+                </li>
+                <li class="nav-item" th:classappend="${#authorization.expression('hasAnyAuthority(''ROLE_ADMIN'')')} ? 'd-block' : 'd-none'">
+                    <a class="nav-link" href="/admin/items">상품 관리</a>
+                </li>
+                <li class="nav-item" th:classappend="${#authorization.expression('isAuthenticated()')} ? 'd-block' : 'd-none'">
+                    <a class="nav-link" href="/cart">장바구니</a>
+                </li>
+                <li class="nav-item" th:classappend="${#authorization.expression('isAuthenticated()')} ? 'd-block' : 'd-none'">
+                    <a class="nav-link" href="/orders">구매이력</a>
+                </li>
+                <li class="nav-item" th:classappend="${#authorization.expression('isAnonymous()')} ? 'd-block' : 'd-none'">
+                    <a class="nav-link" href="/members/login">로그인</a>
+                </li>
+                <li class="nav-item" th:classappend="${#authorization.expression('isAuthenticated()')} ? 'd-block' : 'd-none'">
+                    <a class="nav-link" href="/members/logout">로그아웃</a>
+                </li>
+            </ul>
+
+            <form class="form-inline my-2 my-lg-0 ml-auto" th:action="@{/}" method="get">
+                <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+</div>
+
+<!-- 부트스트랩 JavaScript 및 jQuery (필요시 추가) -->
+<!--
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+        integrity="sha384-r2muwV1bG5Zurp7FsI1kOuW1n4nUoWI+3y/xz9VZm+Gj8HjRsY9iM9/0p4TFSrEu"
+        crossorigin="anonymous"></script>
+-->
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+    <title>후기 작성</title>
+    <!-- Font Awesome CSS 추가 -->
+    <link rel="stylesheet" th:href="@{/webjars/fontawesome/5.15.4/css/all.min.css}" />
+</head>
+
+<!-- 페이지 내용 -->
+<div layout:fragment="content">
+
+    <h2 class="mb-4">주문 후기 작성</h2>
+
+    <!-- 후기 작성 폼 -->
+    <form action="/review" method="post" th:object="${reviewForm}">
+
+        <!-- orderId를 hidden input으로 전달 -->
+        <input type="hidden" th:field="*{orderId}" />
+
+        <!-- itemId를 hidden input으로 전달 -->
+        <input type="hidden" th:field="*{itemId}" />
+
+        <!-- 평가 입력 필드 -->
+        <div class="form-group">
+            <label>평가 (1~5)</label>
+            <div class="rating">
+                <span class="star" th:each="starNumber : ${#numbers.sequence(1, 5)}">
+                    <input type="radio" id="'star' + ${starNumber}" name="rating" th:value="${starNumber}" th:checked="${reviewForm.rating == starNumber}"/>
+                    <label for="'star' + ${starNumber}" title="'${starNumber} star'">
+                        <i class="fas fa-star"></i>
+                    </label>
+                </span>
+            </div>
+            <!-- 평가 필드의 validation 에러 처리 -->
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></small>
+        </div>
+
+        <!-- 댓글 입력 필드 -->
+        <div class="form-group">
+            <label for="comment">댓글</label>
+            <textarea class="form-control" id="comment" rows="5" th:field="*{comment}"></textarea>
+            <!-- 댓글 필드의 validation 에러 처리 -->
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></small>
+        </div>
+
+        <!-- 제출 버튼 -->
+        <button type="submit" class="btn btn-primary">작성 완료</button>
+    </form>
+
+</div>
+
+</html>

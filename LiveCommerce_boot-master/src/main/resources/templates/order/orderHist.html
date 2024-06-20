@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+    <!-- 타이틀 설정 -->
+    <title>구매 이력</title>
+</head>
+
+<!-- 스크립트와 CSS 추가 -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        function cancelOrder(orderId) {
+            var url = "/order/" + orderId + "/cancel";
+            var paramData = {
+                orderId : orderId,
+            };
+
+            var param = JSON.stringify(paramData);
+
+            $.ajax({
+                url      : url,
+                type     : "POST",
+                contentType : "application/json",
+                data     : param,
+                dataType : "json",
+                cache   : false,
+                success  : function(result, status){
+                    alert("주문이 취소 되었습니다.");
+                    location.href='/orders/' + [[${page}]];
+                },
+                error : function(jqXHR, status, error){
+                    if(jqXHR.status == '401'){
+                        alert('로그인 후 이용해주세요');
+                        location.href='/members/login';
+                    } else{
+                        alert(jqXHR.responseText);
+                    }
+                }
+            });
+        }
+    </script>
+</th:block>
+
+<th:block layout:fragment="css">
+    <style>
+        .content-mg {
+            margin-left: 30%;
+            margin-right: 30%;
+            margin-top: 2%;
+            margin-bottom: 100px;
+        }
+        .repImgDiv {
+            margin-right: 15px;
+            margin-left: 15px;
+            height: auto;
+        }
+        .repImg {
+            height: 100px;
+            width: 100px;
+        }
+        .card {
+            width: 750px;
+            height: 100%;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .fs18 {
+            font-size: 18px;
+        }
+        .fs24 {
+            font-size: 24px;
+        }
+    </style>
+</th:block>
+
+<body>
+
+<!-- 레이아웃에서 content-mg 클래스를 사용하여 콘텐츠 영역 정의 -->
+<div layout:fragment="content" class="content-mg">
+
+    <!-- 페이지 제목 -->
+    <h2 class="mb-4">구매 이력</h2>
+
+    <!-- 주문 목록을 반복해서 출력 -->
+    <div th:each="order : ${orders.getContent()}">
+
+        <!-- 주문 항목 -->
+        <div class="d-flex mb-3 align-self-center">
+            <!-- 주문 날짜와 '주문' 문자열 출력 -->
+            <h4 th:text="${order.orderDate} + ' 주문'"></h4>
+            <div class="ml-3">
+                <!-- 주문 상태에 따라 다른 버튼 또는 문구 출력 -->
+                <th:block th:if="${order.orderStatus == T(com.shop.constant.OrderStatus).ORDER}">
+                    <!-- 주문 취소 버튼 -->
+                    <button type="button" class="btn btn-outline-secondary" th:value="${order.orderId}" onclick="cancelOrder(this.value)">주문취소</button>
+                    <!-- 후기 작성 버튼 -->
+                    <a th:href="@{/review/new(orderId=${order.orderId}, itemId=${order.orderItemDtoList[0].itemId})}" class="btn btn-outline-secondary ml-2">후기작성</a>
+                </th:block>
+                <th:block th:unless="${order.orderStatus == T(com.shop.constant.OrderStatus).ORDER}">
+                    <!-- 주문이 취소된 경우 -->
+                    <h4>(취소 완료)</h4>
+                </th:block>
+            </div>
+        </div>
+
+        <!-- 주문 상품 목록 카드 -->
+        <div class="card d-flex">
+            <!-- 주문된 각 상품에 대해 반복해서 출력 -->
+            <div th:each="orderItem : ${order.orderItemDtoList}" class="d-flex mb-3">
+                <!-- 상품 이미지 출력 -->
+                <div class="repImgDiv">
+                    <img th:src="${orderItem.imgUrl}" class="rounded repImg" th:alt="${orderItem.itemNm}">
+                </div>
+                <!-- 상품 정보 출력 -->
+                <div class="align-self-center w-75">
+                    <span th:text="${orderItem.itemNm}" class="fs24 font-weight-bold"></span>
+                    <div class="fs18 font-weight-light">
+                        <span th:text="${orderItem.orderPrice} +'원'"></span>
+                        <span th:text="${orderItem.count} +'개'"></span>
+                      </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div th:with="start=${(orders.number / maxPage) * maxPage + 1}, end=${(orders.totalPages == 0) ? 1 : ((start + maxPage - 1) < orders.totalPages ? (start + maxPage - 1) : orders.totalPages)}">
+        <ul class="pagination justify-content-center">
+            <!-- 이전 페이지 버튼 -->
+            <li class="page-item" th:classappend="${orders.number eq 0} ? 'disabled' : ''">
+                <a th:if="${orders.number > 0}" th:href="@{'/orders/' + ${orders.number - 1}}" aria-label='Previous' class="page-link">
+                    <span aria-hidden='true'>Previous</span>
+                </a>
+                <span th:if="${orders.number == 0}" class="page-link disabled" aria-disabled="true">Previous</span>
+            </li>
+
+            <!-- 페이지 번호 -->
+            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${orders.number eq page-1} ? 'active' : ''">
+                <a th:href="@{'/orders/' + ${page-1}}" th:inline="text" class="page-link" th:text="${page}"></a>
+            </li>
+
+            <!-- 다음 페이지 버튼 -->
+            <li class="page-item" th:classappend="${orders.number+1 ge orders.totalPages} ? 'disabled' : ''">
+                <a th:if="${orders.number + 1 < orders.totalPages}" th:href="@{'/orders/' + ${orders.number + 1}}" aria-label='Next' class="page-link">
+                    <span aria-hidden='true'>Next</span>
+                </a>
+                <span th:if="${orders.number + 1 >= orders.totalPages}" class="page-link disabled" aria-disabled="true">Next</span>
+            </li>
+        </ul>
+
+    </div>
+
+</div>
+
+</body>
+</html>
