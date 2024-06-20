@@ -145,13 +145,13 @@ public class ItemController {
         log.info("====================================");
 
         // 아이템 리뷰 조회
-        ReviewFormDto reviewFormDto = reviewService.getReviewsByItemId(itemId);
+        List<ReviewFormDto> reviews = reviewService.getReviewsByItemId(itemId);
 
         model.addAttribute("item", itemFormDto);
-        model.addAttribute("reviews", reviewFormDto); // 리뷰 정보를 모델에 추가
+        model.addAttribute("reviews", reviews); // 리뷰 정보를 모델에 추가
 
         log.info("==============================");
-        log.info("리뷰" + reviewFormDto);
+        log.info("리뷰" + reviews);
         log.info("==============================");
 
         return "item/itemDtl"; // itemDtl.html로 뷰 리턴

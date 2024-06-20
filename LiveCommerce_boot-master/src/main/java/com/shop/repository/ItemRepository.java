@@ -1,5 +1,6 @@
 package com.shop.repository;
 
+import com.shop.constant.Category;
 import com.shop.entity.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +26,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> ,
 
     @Query(value = "select * from item where item_detail like %:itemDetail% order by price desc", nativeQuery = true)
     List<Item> findByItemDetailByNative(@Param("itemDetail") String itemDetail);
+
+    List<Item> findByCategory(Category category);
 
 //    // 카테고리 ID로 상품 조회
 //    List<Item> findByCategoryId(Long categoryId);

@@ -1,5 +1,6 @@
 package com.shop.service;
 
+import com.shop.constant.Category;
 import com.shop.dto.ItemFormDto;
 import com.shop.dto.ItemImgDto;
 import com.shop.dto.ItemSearchDto;
@@ -132,6 +133,11 @@ public class ItemService {
     @Transactional(readOnly = true)
     public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
         return itemRepository.getMainItemPage(itemSearchDto, pageable);
+    }
+
+
+        public List<Item> getItemsByCategory(Category category) {
+        return itemRepository.findByCategory(category);
     }
 
 //    // 모든 카테고리 조회

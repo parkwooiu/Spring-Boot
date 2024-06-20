@@ -39,6 +39,9 @@
                 <li class="nav-item" th:classappend="${#authorization.expression('hasAnyAuthority(''ROLE_ADMIN'')')} ? 'd-block' : 'd-none'">
                     <a class="nav-link" href="/admin/items">상품 관리</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/category">카테고리</a>
+                </li>
                 <li class="nav-item" th:classappend="${#authorization.expression('isAuthenticated()')} ? 'd-block' : 'd-none'">
                     <a class="nav-link" href="/cart">장바구니</a>
                 </li>

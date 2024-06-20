@@ -181,8 +181,8 @@
         <div th:each="review : ${reviews}" class="card mgt-30">
             <div class="card-body">
                 <h5 class="card-title" th:text="${review.email}">Reviewer Email</h5>
-                <p class="card-text" th:text="${review.rating + '점'}">Rating</p>
-                <p class="card-text" th:text="${review.comment}">Comment</p>
+                <p class="card-text" th:text="'리뷰 평점 : ' + ${review.rating + '점'}">Rating</p>
+                <p class="card-text" th:text="'리뷰 : ' + ${review.comment}">Comment</p>
             </div>
         </div>
     </div>

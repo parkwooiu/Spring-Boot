@@ -42,7 +42,7 @@ public class ReviewService {
 
     // 아이템 ID로 리뷰를 조회하는 메서드 추가
     @Transactional(readOnly = true)
-    public ReviewFormDto getReviewsByItemId(Long itemId) {
-        return reviewRepository.findByItemId(itemId);
+    public List<ReviewFormDto> getReviewsByItemId(Long itemId) {
+        return reviewRepository.findAllByItemId(itemId);
     }
 }
