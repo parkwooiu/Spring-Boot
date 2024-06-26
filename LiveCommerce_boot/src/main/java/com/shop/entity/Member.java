@@ -3,6 +3,8 @@ package com.shop.entity;
 import com.shop.constant.Role;
 import com.shop.dto.MemberFormDto;
 import lombok.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -45,6 +47,20 @@ public class Member  extends BaseEntity{
                 .build();
     }
 
+    // 공지사항 등록 시 현재 사용자 이름 자동 설정
+    public static Member createMemberWithCurrentUser(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder) {
+        // 현재 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+
+        return Member.builder()
+                .name(currentUserName)
+                .email(memberFormDto.getEmail())
+                .address(memberFormDto.getAddress())
+                .password(passwordEncoder.encode(memberFormDto.getPassword()))
+                .role(Role.ADMIN)
+                .build();
 
 
+    }
 }

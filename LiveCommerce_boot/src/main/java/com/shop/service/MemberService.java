@@ -56,6 +56,8 @@ public class MemberService implements UserDetailsService {
                 .roles(member.getRole().toString())
                 .build();
     }
+
+    //Security. 현재 인증된 사용자의 정보를 가져온다.
     public Member getCurrentLoggedInMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = null;

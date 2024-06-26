@@ -1,32 +1,56 @@
 package com.shop.controller;
 
-import com.shop.dto.ChatMessage;
-import com.shop.entity.Chat;
-
-import com.shop.service.ChatService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
+import com.shop.dto.ChatMessageDTO;
+import com.shop.entity.ChatMessage;
+import com.shop.entity.Item;
+import com.shop.entity.Member;
+import com.shop.service.ChatMessageService;
+import com.shop.service.MemberService;
+import com.shop.service.ItemService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Controller
-@RequiredArgsConstructor
 public class ChatController {
 
-    private final ChatService chatService;
+    private final SimpMessagingTemplate messagingTemplate;
+    private final ChatMessageService chatMessageService;
+    private final MemberService memberService;
+    private final ItemService itemService;
 
-    @MessageMapping("/{itemId}") //여기로 전송되면 메서드 호출 -> WebSocketConfig prefixes 에서 적용한건 앞에 생략
-    @SendTo("/item/{itemId}")   //구독하고 있는 장소로 메시지 전송 (목적지)  -> WebSocketConfig Broker 에서 적용한건 앞에 붙어줘야됨
-    public ChatMessage chat(@DestinationVariable Long roomId, ChatMessage message) {
+    public ChatController(SimpMessagingTemplate messagingTemplate, ChatMessageService chatMessageService,
+                          MemberService memberService, ItemService itemService) {
+        this.messagingTemplate = messagingTemplate;
+        this.chatMessageService = chatMessageService;
+        this.memberService = memberService;
+        this.itemService = itemService;
+    }
 
-        //채팅 저장
-        Chat chat = chatService.createChat(roomId, message.getSender(), message.getSenderEmail(), message.getMessage());
-        return ChatMessage.builder()
-                .roomId(roomId)
-                .sender(chat.getSender())
-                .senderEmail(chat.getSenderEmail())
-                .message(chat.getMessage())
-                .build();
+    @MessageMapping("/chat.sendMessage")
+    public void sendMessage(@Payload ChatMessageDTO chatMessageDTO) {
+        Member sender = memberService.getCurrentLoggedInMember(); // 로그인된 멤버 정보 가져오기
+        Item item = itemService.getItemById(chatMessageDTO.getItemId()); // 상품 정보 가져오기
+
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setSender(sender);
+        chatMessage.setItem(item);
+        chatMessage.setContent(chatMessageDTO.getContent());
+        chatMessage.setTimestamp(LocalDateTime.now());
+
+        chatMessageService.saveMessage(chatMessage); // 채팅 메시지 저장
+
+        messagingTemplate.convertAndSend("/sub/public", chatMessage); // 클라이언트에게 메시지 전송
+    }
+
+    @MessageMapping("/chat.getMessages")
+    @SendTo("/sub/public")
+    public List<ChatMessage> getMessages(@Payload Long itemId) {
+        return chatMessageService.getMessagesByItemId(itemId);
     }
 }

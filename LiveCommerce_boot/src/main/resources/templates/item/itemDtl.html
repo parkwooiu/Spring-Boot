@@ -15,235 +15,129 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         $(document).ready(function() {
-            // 장바구니 및 주문 관련 함수
+            calculateTotalPrice();
+
             $("#count").change(function() {
                 calculateTotalPrice();
             });
 
-            function calculateTotalPrice() {
-                var count = $("#count").val();
-                var price = $("#price").val();
-                var totalPrice = price * count;
-                $("#totalPrice").html(totalPrice + '원');
-            }
-
-            function order() {
-                var url = "/order";
-                var paramData = {
-                    itemId: $("#itemId").val(),
-                    count: $("#count").val()
-                };
-
-                var param = JSON.stringify(paramData);
-
-                $.ajax({
-                    url: url,
-                    type: "POST",
-                    contentType: "application/json",
-                    data: param,
-                    dataType: "json",
-                    cache: false,
-                    success: function(result, status) {
-                        alert("주문이 완료 되었습니다.");
-                        location.href = '/';
-                    },
-                    error: function(jqXHR, status, error) {
-                        if (jqXHR.status == '401') {
-                            alert('로그인 후 이용해주세요');
-                            location.href = '/members/login';
-                        } else {
-                            alert(jqXHR.responseText);
-                        }
-                    }
-                });
-            }
-
-            function addCart() {
-                var url = "/cart";
-                var paramData = {
-                    itemId: $("#itemId").val(),
-                    count: $("#count").val()
-                };
-
-                var param = JSON.stringify(paramData);
-
-                $.ajax({
-                    url: url,
-                    type: "POST",
-                    contentType: "application/json",
-                    data: param,
-                    dataType: "json",
-                    cache: false,
-                    success: function(result, status) {
-                        alert("상품을 장바구니에 담았습니다.");
-                        location.href = '/';
-                    },
-                    error: function(jqXHR, status, error) {
-                        if (jqXHR.status == '401') {
-                            alert('로그인 후 이용해주세요');
-                            location.href = '/members/login';
-                        } else {
-                            alert(jqXHR.responseText);
-                        }
-                    }
-                });
-            }
-
-            // 채팅 관련 함수
-            let stompClient = null;
-
-            function connect() {
-                const socket = new SockJS('/ws');
-                stompClient = Stomp.over(socket);
-                stompClient.connect({}, function(frame) {
-                    console.log('Connected: ' + frame);
-
-                    //구독
-                    stompClient.subscribe('/item/'+itemId, function (chatMessage) {
-                        showChat(JSON.parse(chatMessage.body));
-                    });
-                });
-            }
-
-            //html 에서 입력값, itemId 를 받아서 Controller 로 전달
-            function sendMessage() {
-                if ($("#message").val() != "") {
-                    stompClient.send("/item/"+itemId, {},
-                        JSON.stringify({
-                            'sender': sender,
-                            'senderEmail': senderEmail,
-                            'message' : $("#message").val()
-                        }));
-                    $("#message").val('');
+            // 메시지 입력창에서 엔터 키 눌렀을 때 sendMessage 호출
+            $("#message").keypress(function(event) {
+                if (event.keyCode === 13) { // keyCode 13은 엔터 키를 의미합니다.
+                    sendMessage();
                 }
-            }
-            function showMessage(message) {
-                const messageArea = document.getElementById('messageArea');
-                const p = document.createElement('p');
-                p.style.wordWrap = 'break-word';
-                p.textContent = message.sender + ": " + message.content;
-                messageArea.appendChild(p);
-                // 스크롤을 맨 아래로 이동
-                messageArea.scrollTop = messageArea.scrollHeight;
-            }
-
-            // 페이지 로딩 시 WebSocket 연결
-            window.onload = function() {
-                connect();
-            };
-        });
-    </script>
-</th:block>
-
-<script th:inline="javascript">
-    var stompClient = null;
-    var itemId = [[${itemId}]];
-    var chatList = [[${chatList}]];
-    var sender = [[${userName}]];
-    var senderEmail = [[${userEmail}]];
-
-    function setConnected(connected) {
-        $("#connect").prop("disabled", connected);
-        $("#disconnect").prop("disabled", !connected);
-        if (connected) {
-            $("#conversation").show();
-        }
-        else {
-            $("#conversation").hide();
-        }
-        $("#chatting").html("");
-    }
-
-    function connect() {
-        var socket = new SockJS("/ws-stomp");
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
-            setConnected(true);
-            console.log('Connected: ' + frame);
-            loadChat(chatList)  //저장된 채팅 불러오기
-
-            //구독
-            stompClient.subscribe('/item/'+itemId, function (chatMessage) {
-                showChat(JSON.parse(chatMessage.body));
             });
         });
-    }
 
-    function disconnect() {
-        if (stompClient !== null) {
-            stompClient.disconnect();
+        function calculateTotalPrice() {
+            var count = $("#count").val();
+            var price = $("#price").val();
+            var totalPrice = price * count;
+            $("#totalPrice").html(totalPrice + '원');
         }
-        setConnected(false);
-        console.log("Disconnected");
-    }
 
-    //html 에서 입력값, itemId 를 받아서 Controller 로 전달
-    function sendChat() {
-        if ($("#message").val() != "") {
-            stompClient.send("/item/"+itemId, {},
-                JSON.stringify({
-                    'sender': sender,
-                    'senderEmail': senderEmail,
-                    'message' : $("#message").val()
-                }));
-            $("#message").val('');
-        }
-    }
+        function order() {
+            var url = "/order";
+            var paramData = {
+                itemId: $("#itemId").val(),
+                count: $("#count").val()
+            };
 
-    //저장된 채팅 불러오기
-    function loadChat(chatList){
-        if(chatList != null) {
-            for(chat in chatList) {
-                if (chatList[chat].senderEmail == senderEmail) {
-                    $("#chatting").append(
-                        "<div class = 'chatting_own'><tr><td>" + chatList[chat].message + "</td></tr></div>"
-                    );
-                } else {
-                    $("#chatting").append(
-                        "<div class = 'chatting'><tr><td>" + "[" + chatList[chat].sender + "] " + chatList[chat].message + "</td></tr></div>"
-                    );
+            var param = JSON.stringify(paramData);
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: "application/json",
+                data: param,
+                dataType: "json",
+                cache: false,
+                success: function(result, status) {
+                    alert("주문이 완료 되었습니다.");
+                    location.href = '/';
+                },
+                error: function(jqXHR, status, error) {
+                    if (jqXHR.status == '401') {
+                        alert('로그인 후 이용해주세요');
+                        location.href = '/members/login';
+                    } else {
+                        alert(jqXHR.responseText);
+                    }
                 }
-            }
+            });
         }
-        $('.col-md-12').scrollTop($('.col-md-12')[0].scrollHeight); // 채팅이 많아질시에 자동 스크롤
-    }
 
-    //보낸 채팅 보기
-    function showChat(chatMessage) {
-        if (chatMessage.senderEmail == senderEmail) {
-            $("#chatting").append(
-                "<div class = 'chatting_own'><tr><td>" + chatMessage.message + "</td></tr></div>"
-            );
-        } else {
-            $("#chatting").append(
-                "<div class = 'chatting'><tr><td>" + "[" + chatMessage.sender + "] " + chatMessage.message + "</td></tr></div>"
-            );
+        function addCart() {
+            var url = "/cart";
+            var paramData = {
+                itemId: $("#itemId").val(),
+                count: $("#count").val()
+            };
+
+            var param = JSON.stringify(paramData);
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: "application/json",
+                data: param,
+                dataType: "json",
+                cache: false,
+                success: function(result, status) {
+                    alert("상품을 장바구니에 담았습니다.");
+                    location.href = '/';
+                },
+                error: function(jqXHR, status, error) {
+                    if (jqXHR.status == '401') {
+                        alert('로그인 후 이용해주세요');
+                        location.href = '/members/login';
+                    } else {
+                        alert(jqXHR.responseText);
+                    }
+                }
+            });
         }
-        $('.col-md-12').scrollTop($('.col-md-12')[0].scrollHeight);
-    }
 
-    $(function () {
-        $("form").on('submit', function (e) {
-            e.preventDefault();
-        });
-        $( "#connect" ).click(function() { connect(); });
-        $( "#disconnect" ).click(function() { disconnect(); });
-        $( "#send" ).click(function() { sendChat(); });
-    });
-</script>
-<script>
-    //창 키면 바로 연결
-    window.onload = function (){
-        connect();
-    }
+        // 채팅
+        let stompClient = null;
 
-    window.BeforeUnloadEvent = function (){
-        disconnect();
-    }
-</script>
+        function connect() {
+            const socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function(frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/sub/public', function(message) {
+                    showMessage(JSON.parse(message.body));
+                });
+            });
+        }
 
+        function sendMessage() {
+            const message = document.getElementById('message').value;
+            const userId = document.getElementById('userId').value;  // 사용자 ID 입력 요소
+            stompClient.send("/pub/chat.sendMessage", {}, JSON.stringify({
+                'sender': userId,
+                'content': message
+            }));
+            // 메시지 전송 후 입력창 초기화
+            document.getElementById('message').value = '';
+        }
 
+        function showMessage(message) {
+            const messageArea = document.getElementById('messageArea');
+            const p = document.createElement('p');
+            p.style.wordWrap = 'break-word';
+            p.textContent = message.sender + ": " + message.content;
+            messageArea.appendChild(p);
+            // 스크롤을 맨 아래로 이동
+            messageArea.scrollTop = messageArea.scrollHeight;
+        }
 
+        window.onload = function() {
+            connect();
+        };
+    </script>
+</th:block>
 
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
@@ -307,20 +201,20 @@
             cursor: pointer;
         }
 
-        .chatting {
-            background-color: #f1f0f0;
+        .message-list {
+            border: 1px solid #ccc;
             padding: 10px;
-            margin: 5px;
-            border-radius: 5px;
-        }
-        .chatting_own {
-            background-color: #DCF8C6;
-            padding: 10px;
-            margin: 5px;
-            border-radius: 5px;
+            margin-top: 10px;
+            height: 300px;
+            overflow-y: auto;
         }
 
-
+        .message-list p {
+            margin: 5px 0;
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
     </style>
 </th:block>
 
@@ -371,6 +265,16 @@
         </div>
     </div>
 
+    <!-- 채팅 -->
+    <div class="chat-container">
+        <div class="message-list" id="messageArea"></div>
+        <div class="chat-input">
+            <input type="text" id="message" placeholder="메시지를 입력하세요" />
+            <input type="hidden" id="userId" th:value="${#authentication.name}" /> <!-- 시큐리티 사용 -->
+            <button onclick="sendMessage()">전송</button>
+        </div>
+    </div>
+
 
 <!-- 상품 상세 설명 -->
 <div class="jumbotron jumbotron-fluid mgt-30">
@@ -400,26 +304,5 @@
 <div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
     <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
 </div>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>Chat Room</h2>
-                <div id="chatting" class="col-md-12" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"></div>
-                <form id="messageForm">
-                    <div class="form-group">
-                        <input type="text" id="message" class="form-control" placeholder="Type your message...">
-                    </div>
-                    <button type="submit" id="send" class="btn btn-primary">Send</button>
-                </form>
-                <br>
-                <button id="connect" class="btn btn-success">Connect</button>
-                <button id="disconnect" class="btn btn-danger" disabled>Disconnect</button>
-            </div>
-        </div>
-    </div>
-
-
-
 
 </html>

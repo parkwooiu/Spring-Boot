@@ -59,7 +59,8 @@
                 </td>
                 <td th:text="${item.itemSellStatus == T(com.shop.constant.ItemSellStatus).SELL} ? '판매중' : '품절'"></td>
                 <td th:text="${item.createdBy}"></td>
-                <td th:text="${item.regTime}"></td>
+                <td class="card-text"><small class="text-muted" th:text="${#temporals.format(item.regTime, 'yyyy-MM-dd HH:mm:ss')}">작성 시간 없음</small></td>
+
             </tr>
             </tbody>
         </table>
