@@ -4,27 +4,28 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
-@Entity
 @Getter
 @Setter
-public class Comment extends BaseEntity {
+@Entity
+public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "notice_id")
-    private Notice notice; // 해당 댓글이 속한 공지사항
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String content;
 
-    @Column(columnDefinition = "TEXT")
-    private String content; // 댓글 내용
-
+    // 댓글을 작성한 회원과의 관계 설정
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member commenter; // 댓글 작성자
+    private Member member;
 
-    // 생성자, Getter/Setter, toString 등은 생략 (Lombok으로 자동 생성)
+    // 댓글을 작성한 공지사항과의 관계 설정
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notice_id")
+    private Notice notice;
+
+    // 추가적인 필드나 메소드는 필요에 따라 추가 가능
 }

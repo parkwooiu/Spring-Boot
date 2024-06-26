@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,6 +24,9 @@ public class Notice extends BaseTimeEntity{
 
     private String author;
 
+    // 공지사항과 댓글의 관계 설정
+    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
 
 
