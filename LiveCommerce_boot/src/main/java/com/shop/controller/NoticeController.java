@@ -88,50 +88,6 @@ public class NoticeController {
         return "notice/noticeList";
     }
 
-    // 댓글 보기 페이지
-    @GetMapping("/notices/{id}/comments")
-    public String showCommentsForNotice(@PathVariable Long id, Model model) {
-        Optional<Notice> optionalNotice = noticeService.getNoticeById(id);
-        if (optionalNotice.isPresent()) {
-            Notice notice = optionalNotice.get();
-            List<Comment> comments = commentService.getCommentsByNoticeId(id);
-            model.addAttribute("notice", notice);
-            model.addAttribute("comments", comments);
-
-            log.info("notice" + notice);
-            log.info("comments" + comments);
-
-            return "notice/commentList";
-        } else {
-            // 공지사항을 찾지 못한 경우에 대한 처리
-            // 예: 에러 페이지로 리다이렉트 혹은 에러 메시지 출력
-
-            return "error/notFound";
-        }
-
-    }
-
-    @PostMapping("/comments")
-    public String addComment(@RequestParam("noticeId") Long noticeId,
-                             @RequestParam("content") String content,
-                             Model model) {
-        Optional<Notice> optionalNotice = noticeService.getNoticeById(noticeId);
-        if (optionalNotice.isPresent()) {
-            Notice notice = optionalNotice.get();
-            Comment comment = new Comment();
-            comment.setNotice(notice);
-            comment.setContent(content);
-
-            commentService.saveComment(comment);
-
-            // Redirect back to the notice details page
-            return "redirect:/notices/" + noticeId;
-        } else {
-            // Handle the case when the notice is not found
-            model.addAttribute("errorMessage", "Notice not found");
-            return "error";
-        }
-    }
 
 
     // 공지사항 상세 조회

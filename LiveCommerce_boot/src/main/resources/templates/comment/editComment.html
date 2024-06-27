@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>댓글 수정</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <!-- 댓글 수정 폼 -->
+    <div class="card mt-5">
+        <div class="card-body">
+            <h4 class="card-title">댓글 수정</h4>
+            <form th:action="@{/comments/{commentId}/edit(commentId=${comment.id})}" method="post">
+                <div class="form-group">
+                    <textarea class="form-control" rows="3" name="content" placeholder="댓글을 입력하세요" required th:text="${comment.content}"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">댓글 수정</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
