@@ -50,6 +50,7 @@ public class NoticeController {
         return "notice/noticeForm"; // noticeForm.html을 렌더링하여 클라이언트에게 반환
     }
 
+    //공지사항 등록
     @PostMapping("/admin/notice/new")
     public String addNotice(@ModelAttribute("noticeFormDto")
                             @Valid NoticeFormDto noticeFormDto,

@@ -113,24 +113,25 @@
         }
 
         function sendMessage() {
-            const message = document.getElementById('message').value;
-            const userId = document.getElementById('userId').value;  // 사용자 ID 입력 요소
-            stompClient.send("/pub/chat.sendMessage", {}, JSON.stringify({
-                'sender': userId,
-                'content': message
-            }));
-            // 메시지 전송 후 입력창 초기화
-            document.getElementById('message').value = '';
+            const message = $("#message").val();
+            const userId = $("#userId").val();  // 사용자 ID 입력 요소
+
+            if (message && userId) {
+                stompClient.send("/pub/chat.sendMessage", {}, JSON.stringify({
+                    'sender': userId,
+                    'content': message
+                }));
+                // 메시지 전송 후 입력창 초기화
+                $("#message").val('');
+            }
         }
 
         function showMessage(message) {
-            const messageArea = document.getElementById('messageArea');
-            const p = document.createElement('p');
-            p.style.wordWrap = 'break-word';
-            p.textContent = message.sender + ": " + message.content;
-            messageArea.appendChild(p);
-            // 스크롤을 맨 아래로 이동
-            messageArea.scrollTop = messageArea.scrollHeight;
+            const messageArea = $("#messageArea");
+            const p = $("<p></p>");
+            p.text(message.sender + ': ' + message.content);
+            messageArea.append(p);
+            messageArea.scrollTop(messageArea.prop("scrollHeight"));
         }
 
         window.onload = function() {
@@ -177,7 +178,7 @@
             margin-left: 15px;
             height: 400px;
             overflow-y: auto;
-            width: 30%;
+            width: 50%;
         }
 
         .chat-input {
@@ -185,14 +186,14 @@
         }
 
         .chat-input input {
-            width: calc(100% - 70px); /* 버튼 너비 고려하여 입력창 크기 조정 */
+            width: calc(100% - 80px); /* 버튼 너비 고려하여 입력창 크기 조정 */
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px 0 0 4px;
         }
 
         .chat-input button {
-            width: 70px; /* 입력창과 버튼 너비 조정 */
+            width: 80px; /* 입력창과 버튼 너비 조정 */
             padding: 10px;
             border: none;
             background-color: #007bff;
@@ -267,7 +268,10 @@
 
     <!-- 채팅 -->
     <div class="chat-container">
-        <div class="message-list" id="messageArea"></div>
+        <div class="message-list" id="messageArea">
+            <!-- 메시지 목록을 여기에 추가 -->
+            <p th:each="msg : ${messages}" th:text="${msg.sender + ': ' + msg.content}"></p>
+        </div>
         <div class="chat-input">
             <input type="text" id="message" placeholder="메시지를 입력하세요" />
             <input type="hidden" id="userId" th:value="${#authentication.name}" /> <!-- 시큐리티 사용 -->
@@ -275,34 +279,38 @@
         </div>
     </div>
 
-
-<!-- 상품 상세 설명 -->
-<div class="jumbotron jumbotron-fluid mgt-30">
-    <div class="container">
-        <h4 class="display-5">상품 상세 설명</h4>
-        <hr class="my-4">
-        <p class="lead" th:text="${item.itemDetail}"></p>
-    </div>
-</div>
-
-<!-- 리뷰 -->
-<div th:if="${not #lists.isEmpty(reviews)}">
-    <h2>리뷰</h2>
-    <div th:each="review : ${reviews}" class="card mgt-30">
-        <div class="card-body">
-            <h5 class="card-title" th:text="${review.email}">Reviewer Email</h5>
-            <p class="card-text" th:text="'리뷰 평점 : ' + ${review.rating + '점'}">Rating</p>
-            <p class="card-text" th:text="'리뷰 : ' + ${review.comment}">Comment</p>
+    <!-- 상품 상세 설명 -->
+    <div class="jumbotron jumbotron-fluid mgt-30">
+        <div class="container">
+            <h4 class="display-5">상품 상세 설명</h4>
+            <hr class="my-4">
+            <p class="lead" th:text="${item.itemDetail}"></p>
         </div>
     </div>
-</div>
-<div th:if="${#lists.isEmpty(reviews)}">
-    <h2>리뷰가 없습니다.</h2>
+
+    <!-- 리뷰 -->
+    <div th:if="${not #lists.isEmpty(reviews)}">
+        <h2>리뷰</h2>
+        <div th:each="review : ${reviews}" class="card mgt-30">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${review.email}">Reviewer Email</h5>
+                <p class="card-text" th:text="'리뷰 평점 : ' + ${review.rating + '점'}">Rating</p>
+                <p class="card-text" th:text="'리뷰 : ' + ${review.comment}">Comment</p>
+            </div>
+        </div>
+    </div>
+    <div th:if="${#lists.isEmpty(reviews)}">
+        <h2>리뷰가 없습니다.</h2>
+    </div>
+
+    <!-- 기타 이미지들 -->
+    <div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
+        <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
+    </div>
+
 </div>
 
-<!-- 기타 이미지들 -->
-<div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
-    <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
-</div>
+<!-- 스크립트 호출 -->
+<script th:replace="fragments :: script"></script>
 
 </html>

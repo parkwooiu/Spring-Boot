@@ -25,6 +25,7 @@ public class SecurityConfig {
                 .mvcMatchers("/", "/members/**", "/item/**", "/images/**").permitAll()
                 .mvcMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/admin/notice/delete/{id}").permitAll()
+                .antMatchers("/ws").permitAll() // WebSocket 경로 허용
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

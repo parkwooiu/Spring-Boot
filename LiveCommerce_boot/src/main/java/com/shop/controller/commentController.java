@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +24,7 @@ import java.util.Optional;
 @Log4j2
 @AllArgsConstructor
 
-public class commentController {
+public class CommentController {
 
     @Autowired
     private NoticeService noticeService;
@@ -90,12 +91,22 @@ public class commentController {
     }
     // 댓글 수정 폼 표시
     @GetMapping("/comments/{commentId}/edit")
-    public String showEditCommentForm(@PathVariable Long commentId, Model model) {
+    public String showEditCommentForm(@PathVariable Long commentId, Model model, Principal principal) {
         Optional<Comment> optionalComment = commentService.getCommentById(commentId);
         if (optionalComment.isPresent()) {
             Comment comment = optionalComment.get();
-            model.addAttribute("comment", comment);
-            return "comment/editComment";
+
+            // 현재 로그인된 사용자 정보 가져오기
+            Member loggedInMember = memberService.getCurrentLoggedInMember();
+
+            // 댓글 작성자와 현재 로그인된 사용자 비교
+            if (loggedInMember != null && loggedInMember.equals(comment.getMember())) {
+                model.addAttribute("comment", comment);
+                return "comment/editComment";
+            } else {
+                model.addAttribute("errorMessage", "댓글 수정 권한이 없습니다.");
+                return "error";
+            }
         } else {
             model.addAttribute("errorMessage", "댓글을 찾을 수 없습니다.");
             return "error";
@@ -104,13 +115,23 @@ public class commentController {
 
     // 댓글 수정 처리
     @PostMapping("/comments/{commentId}/edit")
-    public String editComment(@PathVariable Long commentId, @RequestParam("content") String content, Model model) {
+    public String editComment(@PathVariable Long commentId, @RequestParam("content") String content, Model model, Principal principal) {
         Optional<Comment> optionalComment = commentService.getCommentById(commentId);
         if (optionalComment.isPresent()) {
             Comment comment = optionalComment.get();
-            comment.setContent(content);
-            commentService.saveComment(comment);
-            return "redirect:/notices/" + comment.getNotice().getId() + "/comments";
+
+            // 현재 로그인된 사용자 정보 가져오기
+            Member loggedInMember = memberService.getCurrentLoggedInMember();
+
+            // 댓글 작성자와 현재 로그인된 사용자 비교
+            if (loggedInMember != null && loggedInMember.equals(comment.getMember())) {
+                comment.setContent(content);
+                commentService.saveComment(comment);
+                return "redirect:/notices/" + comment.getNotice().getId() + "/comments";
+            } else {
+                model.addAttribute("errorMessage", "댓글 수정 권한이 없습니다.");
+                return "error";
+            }
         } else {
             model.addAttribute("errorMessage", "댓글을 찾을 수 없습니다.");
             return "error";
@@ -119,12 +140,22 @@ public class commentController {
 
     // 댓글 삭제 처리
     @PostMapping("/comments/{commentId}/delete")
-    public String deleteComment(@PathVariable Long commentId, Model model) {
+    public String deleteComment(@PathVariable Long commentId, Model model, Principal principal) {
         Optional<Comment> optionalComment = commentService.getCommentById(commentId);
         if (optionalComment.isPresent()) {
             Comment comment = optionalComment.get();
-            commentService.deleteComment(commentId);
-            return "redirect:/notices/" + comment.getNotice().getId() + "/comments";
+
+            // 현재 로그인된 사용자 정보 가져오기
+            Member loggedInMember = memberService.getCurrentLoggedInMember();
+
+            // 댓글 작성자와 현재 로그인된 사용자 비교
+            if (loggedInMember != null && loggedInMember.equals(comment.getMember())) {
+                commentService.deleteComment(commentId);
+                return "redirect:/notices/" + comment.getNotice().getId() + "/comments";
+            } else {
+                model.addAttribute("errorMessage", "댓글 삭제 권한이 없습니다.");
+                return "error";
+            }
         } else {
             model.addAttribute("errorMessage", "댓글을 찾을 수 없습니다.");
             return "error";

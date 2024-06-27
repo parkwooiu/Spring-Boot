@@ -9,11 +9,76 @@
     <!-- 부트스트랩 CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <!-- Favicon 설정 -->
+    <link rel="icon" href="https://im.pstatic.net/selective/img/live_192_192.png">
+
+    <style>
+        /* 네비게이션 바 */
+        .navbar {
+            background-color: #222; /* 진한 회색 배경 */
+            border-bottom: 1px solid #444; /* 진한 회색 선 */
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .navbar-brand {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 폰트 설정 */
+            font-weight: bold;
+            color: #b12704; /* 대표색상 */
+            font-size: 2rem; /* 큰 폰트 사이즈 */
+        }
+
+        .navbar-brand:hover {
+            color: #fff; /* 마우스 호버시 흰색으로 */
+            text-decoration: none; /* 밑줄 제거 */
+        }
+
+        .navbar-nav {
+            margin-left: auto;
+        }
+
+        .nav-item {
+            margin-left: 1rem;
+        }
+
+        .nav-link {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 폰트 설정 */
+            font-weight: 500;
+            color: #ccc; /* 회색 글자 */
+            transition: color 0.3s; /* 색 변화 효과 */
+        }
+
+        .nav-link:hover {
+            color: #b12704; /* 대표색상으로 변경 */
+            text-decoration: none; /* 밑줄 제거 */
+        }
+
+        /* 검색 폼 */
+        .form-control {
+            border: 1px solid #ccc; /* 회색 테두리 */
+            border-radius: 30px; /* 둥근 테두리 */
+            padding: 0.5rem 1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 폰트 설정 */
+        }
+
+        .btn-outline-success {
+            border-color: #b12704; /* 버튼 테두리 색 */
+            color: #b12704; /* 버튼 글자 색 */
+            border-radius: 30px; /* 둥근 테두리 */
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s, color 0.3s; /* 배경색 및 글자색 변화 효과 */
+        }
+
+        .btn-outline-success:hover {
+            background-color: #b12704; /* 대표색상 */
+            color: #fff; /* 흰색으로 변경 */
+        }
+    </style>
 </head>
 
 <body>
 <div th:fragment="header">
-    <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="/">라이브 커머스</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -22,16 +87,7 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <!-- 카테고리 목록 표시 -->
-                <li th:each="category, iterStat : ${categories}" class="nav-item">
-                    <a th:href="@{/live/category(categoryId=${category.categoryID})}"
-                       class="nav-link">
-                        <img th:src="@{/resources/images/icons/__${iterStat.index + 1}__.png}" alt=""
-                             class="category-icon">
-                        <span th:text="${category.categoryName}"></span>
-                    </a>
-                </li>
+            <ul class="navbar-nav">
                 <!-- 사용자 권한에 따른 메뉴 표시 -->
                 <li class="nav-item" th:classappend="${#authorization.expression('hasAnyAuthority(''ROLE_ADMIN'')')} ? 'd-block' : 'd-none'">
                     <a class="nav-link" href="/admin/item/new">상품 등록</a>
@@ -57,13 +113,11 @@
                 <li class="nav-item" th:classappend="${#authorization.expression('isAuthenticated()')} ? 'd-block' : 'd-none'">
                     <a class="nav-link" href="/members/logout">로그아웃</a>
                 </li>
-
-
             </ul>
 
             <form class="form-inline my-2 my-lg-0 ml-auto" th:action="@{/}" method="get">
-                <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="검색어를 입력하세요" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
             </form>
         </div>
     </nav>
