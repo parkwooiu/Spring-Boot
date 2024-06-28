@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>새로운 문의 작성</title>
+    <style>
+        /* 기본 스타일 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        textarea {
+            min-height: 100px; /* 높이를 줄임 */
+            max-height: 200px; /* 최대 높이 설정 */
+            resize: vertical;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>새로운 문의 작성</h1>
+    <form action="/inquiries" method="post">
+        <div class="form-group">
+            <label for="title">제목</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="type">문의 유형</label>
+            <textarea id="type" name="type" placeholder="예: 배송, 반품, 상품 문의 등" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="content">문의 내용</label>
+            <textarea id="content" name="content" rows="6" required></textarea>
+        </div>
+        <button type="submit">문의 작성</button>
+    </form>
+</div>
+</body>
+</html>

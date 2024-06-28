@@ -1,6 +1,5 @@
 package com.shop.config;
 
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,12 +25,13 @@ public class SecurityConfig {
                 .mvcMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/admin/notice/delete/{id}").permitAll()
                 .antMatchers("/ws").permitAll() // WebSocket 경로 허용
+
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/members/login")
                 .defaultSuccessUrl("/")
-                .usernameParameter("email")  // 로그인시 username으로 로그인 id일 때는 생략가능
+                .usernameParameter("email")  // 로그인시 username으로 로그인 id일 때는 생략 가능
                 .failureUrl("/members/login/error")
                 .and()
                 .logout()

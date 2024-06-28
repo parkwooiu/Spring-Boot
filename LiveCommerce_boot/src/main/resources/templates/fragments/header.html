@@ -102,6 +102,9 @@
                     <a class="nav-link" href="/notices">공지사항 관리</a>
                 </li>
                 <li class="nav-item" th:classappend="${#authorization.expression('isAuthenticated()')} ? 'd-block' : 'd-none'">
+                    <a class="nav-link" href="/inquiries">문의 사항</a>
+                </li>
+                <li class="nav-item" th:classappend="${#authorization.expression('isAuthenticated()')} ? 'd-block' : 'd-none'">
                     <a class="nav-link" href="/cart">장바구니</a>
                 </li>
                 <li class="nav-item" th:classappend="${#authorization.expression('isAuthenticated()')} ? 'd-block' : 'd-none'">
@@ -113,6 +116,8 @@
                 <li class="nav-item" th:classappend="${#authorization.expression('isAuthenticated()')} ? 'd-block' : 'd-none'">
                     <a class="nav-link" href="/members/logout">로그아웃</a>
                 </li>
+
+
             </ul>
 
             <form class="form-inline my-2 my-lg-0 ml-auto" th:action="@{/}" method="get">
