@@ -34,7 +34,7 @@ public class ItemController {
     private final ItemService itemService;
     private final ReviewService reviewService;
     private final MemberService memberService;
-    private final ChatMessageService chatMessageService;
+
 
 
     @GetMapping("/admin/item/new")
@@ -148,8 +148,6 @@ public class ItemController {
         //현재 로그인한 회원 조회
         Member member = memberService.getCurrentLoggedInMember();
 
-        // 채팅 메시지 조회
-        List<ChatMessage> chatMessages = chatMessageService.getMessagesByItemId(itemId);
 
 
         log.info("itemId : " + itemId);
@@ -158,7 +156,7 @@ public class ItemController {
         model.addAttribute("item", itemFormDto);
         model.addAttribute("reviews", reviews); // 리뷰 정보를 모델에 추가
         model.addAttribute("member", member);
-        model.addAttribute("chatMessages", chatMessages);
+
 
 
         log.info("-------------------itemDtl2-----------------------------");
@@ -171,8 +169,8 @@ public class ItemController {
         log.info("==============================");
         log.info("로그인한 회원 : " + member);
         log.info("==============================");
-        log.info("채팅 메시지 : " + chatMessages);
-        log.info("==============================");
+
+
 
 
         return "item/itemDtl"; // itemDtl.html로 뷰 리턴
