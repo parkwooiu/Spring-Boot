@@ -266,18 +266,7 @@
         </div>
     </div>
 
-    <!-- 채팅 -->
-    <div class="chat-container">
-        <div class="message-list" id="messageArea">
-            <!-- 메시지 목록을 여기에 추가 -->
-            <p th:each="msg : ${messages}" th:text="${msg.sender + ': ' + msg.content}"></p>
-        </div>
-        <div class="chat-input">
-            <input type="text" id="message" placeholder="메시지를 입력하세요" />
-            <input type="hidden" id="userId" th:value="${#authentication.name}" /> <!-- 시큐리티 사용 -->
-            <button onclick="sendMessage()">전송</button>
-        </div>
-    </div>
+
 
     <!-- 상품 상세 설명 -->
     <div class="jumbotron jumbotron-fluid mgt-30">

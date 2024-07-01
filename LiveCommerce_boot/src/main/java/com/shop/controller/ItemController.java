@@ -1,15 +1,10 @@
 package com.shop.controller;
 
-import com.shop.dto.ChatMessageDTO;
 import com.shop.dto.ItemFormDto;
 import com.shop.dto.ItemSearchDto;
 import com.shop.dto.ReviewFormDto;
-import com.shop.entity.ChatMessage;
 import com.shop.entity.Item;
 import com.shop.entity.Member;
-import com.shop.entity.Review;
-import com.shop.repository.MemberRepository;
-import com.shop.service.ChatMessageService;
 import com.shop.service.ItemService;
 import com.shop.service.MemberService;
 import com.shop.service.ReviewService;
@@ -18,9 +13,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

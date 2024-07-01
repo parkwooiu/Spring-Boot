@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
 <head>
     <meta charset="UTF-8">
     <title>새로운 문의 작성</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
     <style>
-        /* 기본 스타일 */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
         }
 
         .container {
@@ -17,12 +20,12 @@
             background-color: #fff;
             padding: 20px;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-top: 20px;
         }
 
         form {
@@ -46,12 +49,12 @@
             font-size: 14px;
             border: 1px solid #ccc;
             border-radius: 3px;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
         textarea {
-            min-height: 100px; /* 높이를 줄임 */
-            max-height: 200px; /* 최대 높이 설정 */
+            min-height: 100px;
+            max-height: 200px;
             resize: vertical;
         }
 
@@ -71,23 +74,25 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>새로운 문의 작성</h1>
-    <form action="/inquiries" method="post">
-        <div class="form-group">
-            <label for="title">제목</label>
-            <input type="text" id="title" name="title" required>
-        </div>
-        <div class="form-group">
-            <label for="type">문의 유형</label>
-            <textarea id="type" name="type" placeholder="예: 배송, 반품, 상품 문의 등" required></textarea>
-        </div>
-        <div class="form-group">
-            <label for="content">문의 내용</label>
-            <textarea id="content" name="content" rows="6" required></textarea>
-        </div>
-        <button type="submit">문의 작성</button>
-    </form>
+<div layout:fragment="content">
+    <div class="container">
+        <h1>새로운 문의 작성</h1>
+        <form action="/inquiries" method="post">
+            <div class="form-group">
+                <label for="title">제목</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="type">문의 유형</label>
+                <textarea id="type" name="type" placeholder="예: 배송, 반품, 상품 문의 등" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="content">문의 내용</label>
+                <textarea id="content" name="content" rows="6" required></textarea>
+            </div>
+            <button type="submit">문의 작성</button>
+        </form>
+    </div>
 </div>
 </body>
 </html>

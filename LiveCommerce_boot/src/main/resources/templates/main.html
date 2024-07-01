@@ -14,17 +14,23 @@
     <!-- 사용자 CSS 추가 -->
     <th:block layout:fragment="css">
         <style>
+            /* 고급스러운 느낌을 주기 위한 폰트와 색상 설정 */
+            body {
+                font-family: 'Lora', serif;
+                background-color: #f8f9fa;
+                color: #333;
+            }
             .banner {
                 width: 100%;
-                height: auto; /* 가로가 꽉 찼을 때 세로 비율 유지 */
-                max-width: 100%; /* 최대 너비를 100%로 설정 */
-                display: block; /* 이미지를 블록 요소로 만들어 부모 요소 너비에 맞춤 */
+                height: auto;
+                max-width: 100%;
+                display: block;
             }
             .carousel-item {
-                height: 500px; /* 높이를 고정하여 크기를 맞춤 */
+                height: 500px;
             }
             .carousel-item img {
-                object-fit: cover; /* 이미지가 요소 크기에 맞게 잘림 */
+                object-fit: cover;
                 height: 100%;
             }
             .margin {
@@ -42,22 +48,23 @@
                 text-align: center;
             }
             .luxury-card {
-                border: 1px solid #ccc;
+                position: relative;
+                border: 1px solid #e0e0e0;
                 border-radius: 15px;
                 overflow: hidden;
-                transition: transform 0.3s;
+                transition: transform 0.3s, box-shadow 0.3s;
             }
             .luxury-card:hover {
                 transform: scale(1.05);
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
             }
             .luxury-card img {
-                border-bottom: 1px solid #ccc;
+                border-bottom: 1px solid #e0e0e0;
                 border-top-left-radius: 15px;
                 border-top-right-radius: 15px;
             }
             .luxury-card h4, .luxury-card h3 {
-                font-family: 'Georgia', serif;
+                font-family: 'Lora', serif;
             }
             .luxury-card h3 {
                 color: #b12704;
@@ -73,11 +80,53 @@
                 background-color: #b12704;
                 color: #fff;
             }
+            /* 고급스러운 버튼 스타일 */
+            .btn-luxury {
+                background-color: #b12704;
+                color: white;
+                border-radius: 25px;
+                padding: 10px 20px;
+                transition: background-color 0.3s, transform 0.3s;
+                opacity: 0;
+                position: absolute;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%) translateY(10px);
+                pointer-events: none;
+            }
+            .luxury-card:hover .btn-luxury {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+                pointer-events: auto;
+            }
+            .card-body {
+                position: relative;
+                padding-bottom: 60px; /* 버튼이 나올 공간 확보 */
+            }
+            /* 헤더와 푸터 스타일 */
+            .header, .footer {
+                background-color: #333;
+                color: white;
+                padding: 20px 0;
+                text-align: center;
+            }
+            .footer a {
+                color: #b12704;
+                text-decoration: none;
+            }
+            .footer a:hover {
+                text-decoration: underline;
+            }
         </style>
     </th:block>
 </head>
 
 <body>
+<!-- Header -->
+<div class="header">
+    <h1>럭셔리 쇼핑몰</h1>
+</div>
+
 <div layout:fragment="content">
 
     <div id="carouselControls" class="carousel slide margin" data-ride="carousel">
@@ -103,6 +152,7 @@
                             <h4 class="card-title">[[${item.itemNm}]]</h4>
                             <p class="card-text">[[${item.itemDetail}]]</p>
                             <h3 class="card-title">[[${item.price}]]원</h3>
+                            <button class="btn btn-luxury">구매하기</button>
                         </div>
                     </a>
                 </div>
@@ -132,6 +182,11 @@
         </ul>
     </div>
 
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <p>&copy; 2024 럭셔리 쇼핑몰. All Rights Reserved. <a href="/privacy">Privacy Policy</a></p>
 </div>
 
 <!-- Bootstrap JS -->
