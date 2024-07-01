@@ -49,7 +49,7 @@ public class Member extends BaseEntity {
                 .email(memberFormDto.getEmail())
                 .address(memberFormDto.getAddress())
                 .password(passwordEncoder.encode(memberFormDto.getPassword()))
-                .role(Role.USER) // 기본 역할을 USER로 설정
+                .role(Role.ADMIN) // 기본 역할을 USER로 설정
                 .build();
     }
 
